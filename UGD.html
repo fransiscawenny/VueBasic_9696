@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <script src="vue.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    
+    <title>Game</title>
+  </head>
+
+  <body>
+    <div id="app">
+        <div class="text-center">
+            <h2 style="margin-top: 10%;">Yuk! tebak angka antara 1 sampai 10</h2>
+            <p>Kamu punya kesempatan 3 kali ya!</p>
+            <br><br>
+        </div>
+
+        <div v-if="path == '.'">
+            <input v-model="guess" type="number" name="input">
+            <button @click="checkInput()">Check</button>
+        </div>
+
+        <div v-if="path == 'greater'">
+            <input :disabled="shouldDisable" v-model="guess" type="number" name="input" ><button :disabled="shouldDisable" @click="checkInput()">Check</button>
+            <p class="text-center">!!!Your number is greater!!!</p>
+            <button :disabled="test" @click="tryAgain()" style="margin-left: 47%;">Try Again</button>
+        </div>
+
+        <div v-if="path == 'less'">
+            <input :disabled="shouldDisable" v-model="guess" type="number" name="input" ><button :disabled="shouldDisable" @click="checkInput()">Check</button>
+            <p class="text-center">!!!Your number is less!!!</p>
+            <button :disabled="cek" @click="tryAgain()" style="margin-left: 47%;">Try Again</button>
+        </div>
+
+        <div v-if="path == 'victory'">
+            <p class="text-center">Selamat kamu berhasil!</p>
+            <button style = " margin-left: 46%; background-color: #a8e6cf;" @click="reload()" >Play Again</button>
+        </div>
+
+        <div v-if="path == 'lost'">
+                <p class="text-center"> Kesempatan mu udah habis, coba lagi ya!</p>
+                <button style = " margin-left: 47%; background-color:#ff8080" @click="reload()">Play Again</button>
+        </div>
+        
+        <footer>
+            <h5 class="text-uppercase text-center py-3">Created by</h5>
+            <p class="text-center py-3"> {{nama}} | {{npm}} | {{kelas}} </p>
+        </footer>
+    </div>
+  </body>
+  <script>
+    new Vue({
+        el: '#app',
+        data: {
+            nama: "Fransisca Wenny S.",
+            npm: "180709696",
+            kelas: "D",
+            n: -1,
+            i: 0,
+            path: '.',
+            guess : '',
+            shouldDisable: true,
+            cek: false
+        },
+        methods: {
+            setRndNumber: function() {
+                do {
+                this.n = Math.ceil(Math.random()*10);
+                } while (this.n>10 || this.n<1);
+                console.log(this.n);
+            },
+            checkInput : function(input) {
+                if (this.n == -1)
+                    this.setRndNumber();			  
+                    this.shouldDisable=true
+                    this.cek=false
+                let num = parseInt(this.guess);
+                this.guess = '';
+                num=Math.ceil(num);
+            
+                if (num>=1 && num<=10) {
+                ++this.i;
+                if (num == this.n) {
+                    this.path = "victory";
+                }
+                else {
+                    if (this.i==3) {
+                    this.path = "lost";
+                    }
+                    else {
+                    if (num>this.n) {
+                        this.path = "greater";
+                        };
+                    if (num<this.n) {
+                        this.path ="less";
+                        };
+                    }
+                };
+                //form.reset ();
+            }
+            else {
+                alert('The number should be between 1 and 10.');
+                //form.reset ();
+            }
+        },
+        showNumberToGuess: function() {
+                alert('The number to guess is ' + this.n);
+        },
+        reload: function() {
+            this.path = ".";
+            this.setRndNumber();
+            this.i = 0;
+        },  
+        tryAgain: function(){
+            this.shouldDisable=false
+            this.cek=true
+        }    
+        }
+  });
+</script>
+</html>
+<style>
+    footer{
+        background-color: #f5a8a8;
+        color: black;
+        bottom:0;
+        width:100%;
+        height:170px;
+        position: absolute;
+    }
+
+    input{
+        margin-left: 40%;
+        margin-top: -10px;
+    }
+
+    button{
+        margin-left: 48%;
+        border: none;
+        display: inline-block;
+        margin: 6px 4px;
+        border-radius: 10px;
+        background-color: #fab7b7;
+    }
+</style>
